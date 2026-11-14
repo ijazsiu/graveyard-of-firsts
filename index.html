@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Graveyard of Firsts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap">
+<style>
+:root{--bg:#f1efe9;--surface:#fff;--text:#1d2233;--muted:#5b6275;--line:#d6d2c6;--moon:#4a5a78;--mars:#b4502a;--accent:var(--moon);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1426;--surface:#17203a;--text:#ebe7dc;--muted:#a3a9bd;--line:#2c3656;--moon:#b9c4d6;--mars:#e0805a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1426;--surface:#17203a;--text:#ebe7dc;--muted:#a3a9bd;--line:#2c3656;--moon:#b9c4d6;--mars:#e0805a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font:700 clamp(2rem,8vw,3rem)/1.05 Fraunces,Georgia,serif;margin:8px 0 8px}
+.lede{color:var(--muted);margin:0 0 18px;max-width:60ch}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button,.chips button,.sub button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:8px 16px;min-height:40px}
+.tabs button[aria-pressed="true"],.chips button[aria-pressed="true"],.sub button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.map{width:100%;display:block;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.map .grid{stroke:var(--line);stroke-width:.4}
+.map .pin{cursor:pointer}
+.map .pin circle{fill:var(--accent);stroke:var(--bg);stroke-width:1.2}
+.map .pin .ring{fill:none;stroke:var(--accent);stroke-width:.8;opacity:0}
+.map .pin.on .ring{opacity:1}
+.map text{fill:var(--muted);font-size:5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.chips button{padding:6px 12px;font-size:.9rem;min-height:36px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px}
+.card h2{font:700 1.6rem/1.15 Fraunces,Georgia,serif;margin:0 0 2px}
+.meta{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.story{font:500 1.08rem/1.65 Fraunces,Georgia,serif;margin:0 0 14px}
+.sub{display:flex;gap:8px;margin-bottom:10px}
+.sub button{padding:4px 14px;min-height:34px;font-size:.9rem}
+.panel p{margin:0 0 10px}
+.lesson{border-left:3px solid var(--accent);padding-left:12px;margin-top:14px}
+footer{color:var(--muted);font-size:.8rem;margin-top:22px}
+@media (prefers-reduced-motion:no-preference){.card{animation:in .25s ease-out}@keyframes in{from{opacity:.4}to{opacity:1}}}
+</style>
+</head>
+<body>
+<main>
+<h1>Graveyard of Firsts</h1>
+<p class="lede">NASA’s machines never really “retired.” They stayed where they landed. Pick a world, tap a site, and hear each one tell its own story.</p>
+<div class="tabs" id="tabs" role="group" aria-label="Choose a world">
+<button data-w="moon" aria-pressed="true">Moon</button>
+<button data-w="mars" aria-pressed="false">Mars</button>
+</div>
+<svg class="map" id="map" viewBox="0 0 360 180" role="img" aria-label="Map of landing sites"></svg>
+<div class="chips" id="chips"></div>
+<section class="card" aria-live="polite">
+<h2 id="name"></h2>
+<p class="meta" id="meta"></p>
+<p class="story" id="story"></p>
+<div class="sub" id="sub" role="group" aria-label="Then or now">
+<button data-t="then" aria-pressed="true">Then</button>
+<button data-t="now" aria-pressed="false">Now</button>
+</div>
+<div class="panel" id="panel"></div>
+<div class="lesson"><strong>What it taught us</strong><p id="lesson" style="margin:4px 0 0"></p></div>
+</section>
+<footer>Locations are approximate. Facts are drawn from NASA mission histories; verify against NASA sources before submitting.</footer>
+</main>
+<script>
+var D={
+moon:[
+{n:"Apollo 11 Eagle",y:"1969",lon:23.5,lat:0.7,
+s:"I carried two people to the surface, then split in half. My top half flew them home. My bottom half stayed behind at Tranquility Base, still holding a plaque that says we came in peace.",
+then:"Landed July 20, 1969. Neil Armstrong and Buzz Aldrin spent about 21 hours on the surface and left a flag, instruments and footprints.",
+now:"My descent stage sits where it landed, slowly sandblasted by micrometeorites. There is no air or rain to wear it down, so it is still there.",
+l:"The first crewed landing proved that precision landing and a clean ascent are the hardest parts of leaving a world."},
+{n:"Surveyor 3",y:"1967",lon:-23.4,lat:-3,
+s:"I dug trenches and sent TV pictures, then went quiet. Two and a half years later, two visitors walked up to me and cut pieces off my frame.",
+then:"Soft-landed in April 1967 in Oceanus Procellarum with a camera and a scoop to test the soil for Apollo.",
+now:"Apollo 12 astronauts visited in November 1969 and brought back my camera and tubing. Scientists studied how materials aged on the Moon.",
+l:"Leaving hardware behind can become an experiment: it shows how materials survive years of vacuum and radiation."},
+{n:"Apollo 15 Rover",y:"1971",lon:3.6,lat:26.1,
+s:"I was folded up like a suitcase and driven for about 28 kilometres. At the end, I was parked at the edge of Hadley Rille, facing my camera’s last view of the departure.",
+then:"The first Lunar Roving Vehicle gave astronauts a much larger exploration range than walking.",
+now:"I still sit parked near Hadley Rille, together with my two sister rovers from Apollo 16 and 17.",
+l:"Mobility multiplies science: the farther you can safely go, the more geology you can sample."},
+{n:"Apollo 17 Challenger",y:"1972",lon:30.8,lat:20.2,
+s:"I was the last crewed lander of the program. My descent stage still carries a plaque saying that we left as we came, in peace, for all mankind.",
+then:"Landed in Taurus-Littrow in December 1972. It was the longest Apollo surface stay, and it included a geologist.",
+now:"No human has returned to the surface since. My descent stage waits for the next visitors.",
+l:"The last landing reminds us that going back takes sustained commitment, not just one bold mission."}
+],
+mars:[
+{n:"Viking 1",y:"1976",lon:-50,lat:22.5,
+s:"I was the first lander to work on Mars for a long time. I scooped soil and ran experiments searching for life, and I kept sending weather reports for years after.",
+then:"Landed July 20, 1976 in Chryse Planitia, with two experiments designed to look for signs of microbial life.",
+now:"Contact ended in November 1982, and I have been a quiet monument ever since. Mars weather has slowly buried my feet.",
+l:"Long-lived weather and soil data proved that a simple lander can still deliver science for years."},
+{n:"Sojourner",y:"1997",lon:-33.2,lat:19.1,
+s:"I was a small rover about the size of a microwave. I was supposed to last a week. I drove across rocks and showed that rovers can work on Mars.",
+then:"Delivered by the Pathfinder lander in July 1997 as a technology demo planned for roughly a week.",
+now:"I operated for about 83 sols, far beyond plan. After my base station stopped talking in September 1997, I stayed where I stopped.",
+l:"Small, cheap rovers can pay off enormously, which started the whole rover era."},
+{n:"Spirit",y:"2004",lon:175.5,lat:-14.6,
+s:"I was meant to work for 90 days. I climbed hills no one thought a rover could, then got stuck in soft sand and kept working as a stationary science station.",
+then:"Landed in Gusev Crater in January 2004 and found evidence of past water.",
+now:"I stopped communicating in March 2010, as the Martian winter starved my solar panels.",
+l:"A stuck rover still taught us about soil and water, and about how to avoid soft sand traps."},
+{n:"Opportunity",y:"2004",lon:-5.5,lat:-1.9,
+s:"I was planned for 90 days and I drove for about 14 years. A planet-wide dust storm covered my panels, and I sent my last message, which people translated as my battery getting low and the dark getting dark.",
+then:"Landed in Meridiani Planum in January 2004 and found minerals that formed in water.",
+now:"Contact was lost in June 2018. NASA declared the mission complete in February 2019, and I am still parked in Perseverance Valley.",
+l:"Designing for dust, power and repair has shaped every Mars mission since."},
+{n:"Ingenuity",y:"2021",lon:77.5,lat:18.4,
+s:"I was a four-pound helicopter that was only supposed to fly five times. I flew dozens of times and became a scout for the rover that carried me.",
+then:"Made the first powered, controlled flight on another planet in April 2021 in Jezero Crater.",
+now:"After 72 flights, a rotor was damaged in a landing, and my mission ended in January 2024. I rest at Valinhos Airfield on Mars.",
+l:"Flying in thin air is possible, so future missions can scout from above."}
+]};
+var W="moon",I=0,T="then";
+var $=function(i){return document.getElementById(i)};
+function pos(o){return[(o.lon+180),(90-o.lat)]}
+function draw(){
+var h="";for(var x=0;x<=360;x+=30)h+='<line class="grid" x1="'+x+'" y1="0" x2="'+x+'" y2="180"/>';
+for(var y=0;y<=180;y+=30)h+='<line class="grid" x1="0" y1="'+y+'" x2="360" y2="'+y+'"/>';
+h+='<text x="3" y="92">0°</text>';
+D[W].forEach(function(o,i){var p=pos(o);
+h+='<g class="pin'+(i===I?' on':'')+'" data-i="'+i+'" tabindex="0" role="button" aria-label="'+o.n+'"><circle class="ring" cx="'+p[0]+'" cy="'+p[1]+'" r="7"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5"/></g>';});
+$("map").innerHTML=h;
+$("chips").innerHTML=D[W].map(function(o,i){return'<button data-i="'+i+'" aria-pressed="'+(i===I)+'">'+o.n+'</button>'}).join("");
+var o=D[W][I];
+$("name").textContent=o.n;$("meta").textContent=(W==="moon"?"Moon":"Mars")+", landed "+o.y;
+$("story").textContent="“"+o.s+"”";
+$("panel").innerHTML="<p></p>";$("panel").firstChild.textContent=o[T];
+$("lesson").textContent=o.l;
+document.querySelectorAll("#sub button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===T)});
+document.querySelectorAll("#tabs button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.w===W)});
+document.documentElement.style.setProperty("--accent","var(--"+W+")");
+}
+function pick(i){I=+i;T="then";draw()}
+$("tabs").onclick=function(e){var w=e.target.dataset.w;if(w){W=w;I=0;T="then";draw()}};
+$("sub").onclick=function(e){var t=e.target.dataset.t;if(t){T=t;draw()}};
+$("chips").onclick=function(e){if(e.target.dataset.i!=null)pick(e.target.dataset.i)};
+$("map").onclick=function(e){var g=e.target.closest(".pin");if(g)pick(g.dataset.i)};
+$("map").onkeydown=function(e){if(e.key==="Enter"||e.key===" "){var g=e.target.closest(".pin");if(g){e.preventDefault();pick(g.dataset.i)}}};
+draw();
+</script>
+</body>
+</html>
